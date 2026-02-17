@@ -1,8 +1,11 @@
 const express = require('express');
 const path = require('path');
 const os = require('os');
+const dns = require('dns');
 const { Pool } = require('pg');
 const sqlite3 = require('sqlite3').verbose();
+
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +20,7 @@ const sqliteDb = isPostgres ? null : new sqlite3.Database(dbPath);
 const pgPool = isPostgres
   ? new Pool({
       connectionString: DATABASE_URL,
+      family: 4,
       ssl: process.env.PGSSLMODE === 'disable' ? false : { rejectUnauthorized: false }
     })
   : null;
