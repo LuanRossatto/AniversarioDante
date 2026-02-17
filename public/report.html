@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatório de Confirmações</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <h1>📊 Relatório de Confirmações</h1>
+
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span>Total respostas</span>
+            <strong id="totalRespostas">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Confirmados (Sim)</span>
+            <strong id="totalSim">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Recusas (Não)</span>
+            <strong id="totalNao">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Acompanhantes</span>
+            <strong id="totalAcompanhantes">0</strong>
+          </div>
+        </div>
+
+        <button id="refreshBtn" class="secondary">Atualizar</button>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Resposta</th>
+                <th>Acompanhantes</th>
+                <th>Observação</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody id="responsesTableBody"></tbody>
+          </table>
+        </div>
+
+        <p class="report-link"><a href="/">← Voltar para convite</a></p>
+      </section>
+    </main>
+
+    <script src="report.js"></script>
+  </body>
+</html>

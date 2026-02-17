@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aniversário do Dante</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="dino-decor" aria-hidden="true">
+      <span>🦕</span>
+      <span>🦖</span>
+      <span>🥚</span>
+      <span>🌿</span>
+      <span>🦕</span>
+    </div>
+
+    <main class="container">
+      <section class="card">
+        <p class="theme-badge">Tema: Mundo dos Dinossauros</p>
+        <h1 class="main-title">🦕 Aniversário do Dante 🦖</h1>
+        <p class="event-info"><strong>Data:</strong> 18/04/2026 às 16:00h</p>
+        <p class="event-info"><strong>Local:</strong> Chácara Primong, Marília-SP</p>
+        <p class="description">Prepare-se para uma aventura jurássica! Vai ser uma noite especial e quero muito sua presença.</p>
+
+        <section class="countdown-section" aria-label="Contagem regressiva para a festa">
+          <h2>Contagem regressiva</h2>
+          <p id="countdown" class="countdown-value">Calculando...</p>
+        </section>
+
+        <section class="dino-fun" aria-label="Interação tema dinossauro">
+          <h2>Interativo Dino</h2>
+          <button id="dinoRoarBtn" class="secondary" type="button">Rugido surpresa 🦖</button>
+          <p id="dinoMessage" class="dino-message">Clique para receber uma mensagem jurássica!</p>
+        </section>
+
+        <form id="rsvpForm" class="form">
+          <h2>Confirmação de presença</h2>
+          <label for="name">Seu nome</label>
+          <input id="name" name="name" type="text" placeholder="Digite seu nome" required />
+
+          <fieldset class="attendance-group">
+            <legend>Você vai?</legend>
+            <div class="attendance-options">
+              <input class="attendance-input" id="attendanceSim" type="radio" name="attendance" value="sim" required />
+              <label class="attendance-btn attendance-btn-yes" for="attendanceSim">✅ Sim, vou 🦕</label>
+
+              <input class="attendance-input" id="attendanceNao" type="radio" name="attendance" value="nao" required />
+              <label class="attendance-btn attendance-btn-no" for="attendanceNao">❌ Não vou 😢</label>
+            </div>
+          </fieldset>
+
+          <label for="guests">Quantidade de acompanhantes</label>
+          <div class="guests-stepper" aria-label="Controle de acompanhantes">
+            <button id="guestsMinusBtn" class="step-btn" type="button" aria-label="Diminuir acompanhantes">−</button>
+            <input id="guests" name="guests" type="number" min="0" value="0" readonly />
+            <button id="guestsPlusBtn" class="step-btn" type="button" aria-label="Aumentar acompanhantes">+</button>
+          </div>
+
+          <label for="note">Observação (opcional)</label>
+          <textarea id="note" name="note" rows="3" placeholder="Ex.: restrição alimentar"></textarea>
+
+          <button type="submit">Enviar confirmação</button>
+        </form>
+
+        <p id="feedback" class="feedback" aria-live="polite"></p>
+        <p class="report-link">Área do anfitrião: <a href="/relatorio">ver relatório</a></p>
+
+        <section class="map-section" aria-label="Localização do evento">
+          <h2>Como chegar</h2>
+          <div class="map-wrap">
+            <iframe
+              title="Mapa para Chácara Primong em Marília-SP"
+              src="https://www.google.com/maps?q=Chacara+Primong+Marilia+SP&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+            <a
+              class="map-overlay-link"
+              href="https://www.google.com/maps/dir/?api=1&destination=Chacara+Primong+Marilia+SP&travelmode=driving"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Abrir rota no Google Maps"
+              title="Toque para abrir a rota no Google Maps"
+            ></a>
+          </div>
+          <p class="map-touch-tip">Toque no mapa para abrir a rota no Google Maps.</p>
+          <p class="map-link">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Chacara+Primong+Marilia+SP&travelmode=driving" target="_blank" rel="noopener noreferrer">
+              Abrir rota no Google Maps
+            </a>
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

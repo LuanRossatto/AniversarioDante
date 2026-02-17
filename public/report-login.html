@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso ao Relatório</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card form">
+        <h1>🔒 Relatório protegido</h1>
+        <p class="description">Digite a senha para visualizar o relatório de confirmações.</p>
+
+        <form id="reportLoginForm" class="form">
+          <label for="reportPassword">Senha</label>
+          <input id="reportPassword" name="password" type="password" placeholder="Digite a senha" required />
+          <button type="submit">Entrar no relatório</button>
+        </form>
+
+        <p id="loginFeedback" class="feedback" aria-live="polite"></p>
+        <p class="report-link"><a href="/">← Voltar para convite</a></p>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById('reportLoginForm');
+      const feedback = document.getElementById('loginFeedback');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const password = document.getElementById('reportPassword').value;
+        feedback.textContent = 'Validando senha...';
+        feedback.className = 'feedback';
+
+        try {
+          const response = await fetch('/api/report-login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Senha inválida.');
+          }
+
+          feedback.textContent = 'Acesso liberado!';
+          feedback.className = 'feedback success';
+          window.location.href = '/relatorio';
+        } catch (error) {
+          feedback.textContent = error.message;
+          feedback.className = 'feedback error';
+        }
+      });
+    </script>
+  </body>
+</html>
