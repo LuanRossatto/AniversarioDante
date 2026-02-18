@@ -4,14 +4,47 @@ const countdown = document.getElementById('countdown');
 const dinoRoarBtn = document.getElementById('dinoRoarBtn');
 const dinoMessage = document.getElementById('dinoMessage');
 const guestsInput = document.getElementById('guests');
-const guestsMinusBtn = document.getElementById('guestsMinusBtn');
-const guestsPlusBtn = document.getElementById('guestsPlusBtn');
+const guestsModal = document.getElementById('guestsModal');
+const modalGuestsInput = document.getElementById('modalGuests');
+const modalGuestsMinusBtn = document.getElementById('modalGuestsMinusBtn');
+const modalGuestsPlusBtn = document.getElementById('modalGuestsPlusBtn');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 const attendanceInputs = document.querySelectorAll('input[name="attendance"]');
 
 function setGuestsValue(value) {
   const parsed = Number.parseInt(value, 10);
   const safeValue = Number.isNaN(parsed) ? 0 : Math.max(0, parsed);
   guestsInput.value = String(safeValue);
+}
+
+function setModalGuestsValue(value) {
+  if (!modalGuestsInput) {
+    return;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+  const safeValue = Number.isNaN(parsed) ? 0 : Math.max(0, parsed);
+  modalGuestsInput.value = String(safeValue);
+}
+
+function openGuestsModal() {
+  if (!guestsModal) {
+    return;
+  }
+
+  setModalGuestsValue(guestsInput.value || 0);
+  guestsModal.classList.add('open');
+  guestsModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeGuestsModal() {
+  if (!guestsModal) {
+    return;
+  }
+
+  guestsModal.classList.remove('open');
+  guestsModal.setAttribute('aria-hidden', 'true');
 }
 
 function updateCountdown() {
@@ -41,32 +74,36 @@ function updateGuestsField() {
 
   if (selectedAttendance === 'nao') {
     guestsInput.value = 0;
-    guestsInput.disabled = true;
-    if (guestsMinusBtn) guestsMinusBtn.disabled = true;
-    if (guestsPlusBtn) guestsPlusBtn.disabled = true;
-    guestsInput.title = 'Desabilitado quando a resposta é Não';
+    closeGuestsModal();
     return;
   }
-
-  guestsInput.disabled = false;
-  if (guestsMinusBtn) guestsMinusBtn.disabled = false;
-  if (guestsPlusBtn) guestsPlusBtn.disabled = false;
-  guestsInput.title = '';
 }
 
 attendanceInputs.forEach((input) => {
   input.addEventListener('change', updateGuestsField);
 });
 
-if (guestsMinusBtn && guestsPlusBtn && guestsInput) {
-  guestsMinusBtn.addEventListener('click', () => {
-    const current = Number.parseInt(guestsInput.value, 10) || 0;
-    setGuestsValue(current - 1);
+if (modalGuestsMinusBtn && modalGuestsPlusBtn && modalGuestsInput) {
+  modalGuestsMinusBtn.addEventListener('click', () => {
+    const current = Number.parseInt(modalGuestsInput.value, 10) || 0;
+    setModalGuestsValue(current - 1);
   });
 
-  guestsPlusBtn.addEventListener('click', () => {
-    const current = Number.parseInt(guestsInput.value, 10) || 0;
-    setGuestsValue(current + 1);
+  modalGuestsPlusBtn.addEventListener('click', () => {
+    const current = Number.parseInt(modalGuestsInput.value, 10) || 0;
+    setModalGuestsValue(current + 1);
+  });
+}
+
+if (modalCancelBtn) {
+  modalCancelBtn.addEventListener('click', closeGuestsModal);
+}
+
+if (guestsModal) {
+  guestsModal.addEventListener('click', (event) => {
+    if (event.target === guestsModal) {
+      closeGuestsModal();
+    }
   });
 }
 
@@ -92,9 +129,7 @@ updateCountdown();
 window.setInterval(updateCountdown, 60000);
 updateGuestsField();
 
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
+async function submitRsvp() {
   const formData = new FormData(form);
   const payload = {
     name: formData.get('name')?.toString().trim(),
@@ -106,26 +141,56 @@ form.addEventListener('submit', async (event) => {
   feedback.textContent = 'Enviando...';
   feedback.className = 'feedback';
 
-  try {
-    const response = await fetch('/api/rsvp', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+  const response = await fetch('/api/rsvp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
 
-    const result = await response.json();
+  const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.error || 'Não foi possível enviar agora.');
+  if (!response.ok) {
+    throw new Error(result.error || 'Não foi possível enviar agora.');
+  }
+
+  feedback.textContent = 'Confirmação enviada com sucesso. Nos vemos na era dos dinossauros!';
+  feedback.className = 'feedback success';
+  form.reset();
+  setGuestsValue(0);
+  setModalGuestsValue(0);
+  updateGuestsField();
+}
+
+if (modalConfirmBtn) {
+  modalConfirmBtn.addEventListener('click', async () => {
+    setGuestsValue(modalGuestsInput?.value || 0);
+    closeGuestsModal();
+
+    try {
+      await submitRsvp();
+    } catch (error) {
+      feedback.textContent = error.message;
+      feedback.className = 'feedback error';
     }
+  });
+}
 
-    feedback.textContent = 'Confirmação enviada com sucesso. Nos vemos na era dos dinossauros!';
-    feedback.className = 'feedback success';
-    form.reset();
-    setGuestsValue(0);
-    updateGuestsField();
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const selectedAttendance = document.querySelector('input[name="attendance"]:checked')?.value;
+
+  if (selectedAttendance === 'sim') {
+    openGuestsModal();
+    return;
+  }
+
+  setGuestsValue(0);
+
+  try {
+    await submitRsvp();
   } catch (error) {
     feedback.textContent = error.message;
     feedback.className = 'feedback error';

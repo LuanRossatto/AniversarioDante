@@ -50,12 +50,7 @@
             </div>
           </fieldset>
 
-          <label for="guests">Quantidade de acompanhantes</label>
-          <div class="guests-stepper" aria-label="Controle de acompanhantes">
-            <button id="guestsMinusBtn" class="step-btn" type="button" aria-label="Diminuir acompanhantes">−</button>
-            <input id="guests" name="guests" type="number" min="0" value="0" readonly />
-            <button id="guestsPlusBtn" class="step-btn" type="button" aria-label="Aumentar acompanhantes">+</button>
-          </div>
+          <input id="guests" name="guests" type="hidden" value="0" />
 
           <label for="note">Observação (opcional)</label>
           <textarea id="note" name="note" rows="3" placeholder="Ex.: restrição alimentar"></textarea>
@@ -93,6 +88,27 @@
         </section>
       </section>
     </main>
+
+    <div id="guestsModal" class="modal-backdrop" aria-hidden="true">
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <h2 id="modalTitle">Acompanhantes</h2>
+        <p class="modal-text">
+          Informe a quantidade de acompanhantes <strong>adicionais</strong>.<br />
+          Não conte a pessoa que digitou o nome.
+        </p>
+
+        <div class="modal-stepper" aria-label="Quantidade de acompanhantes adicionais">
+          <button id="modalGuestsMinusBtn" class="step-btn" type="button" aria-label="Diminuir acompanhantes">−</button>
+          <input id="modalGuests" type="number" min="0" value="0" readonly />
+          <button id="modalGuestsPlusBtn" class="step-btn" type="button" aria-label="Aumentar acompanhantes">+</button>
+        </div>
+
+        <div class="modal-actions">
+          <button id="modalCancelBtn" class="secondary" type="button">Cancelar</button>
+          <button id="modalConfirmBtn" type="button">Confirmar presença</button>
+        </div>
+      </section>
+    </div>
 
     <script src="app.js"></script>
   </body>

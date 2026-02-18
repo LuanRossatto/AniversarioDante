@@ -2,6 +2,7 @@ const totalRespostasEl = document.getElementById('totalRespostas');
 const totalSimEl = document.getElementById('totalSim');
 const totalNaoEl = document.getElementById('totalNao');
 const totalAcompanhantesEl = document.getElementById('totalAcompanhantes');
+const totalPessoasEl = document.getElementById('totalPessoas');
 const tableBody = document.getElementById('responsesTableBody');
 const refreshBtn = document.getElementById('refreshBtn');
 
@@ -66,6 +67,10 @@ async function loadReport() {
     totalSimEl.textContent = data.summary.totalSim;
     totalNaoEl.textContent = data.summary.totalNao;
     totalAcompanhantesEl.textContent = data.summary.totalAcompanhantes;
+    const totalPessoas = Number(data.summary.totalSim || 0) + Number(data.summary.totalAcompanhantes || 0);
+    if (totalPessoasEl) {
+      totalPessoasEl.textContent = totalPessoas;
+    }
 
     renderRows(data.responses);
   } catch (error) {
